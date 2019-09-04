@@ -1,6 +1,7 @@
 package org.petitparser.grammar.xml;
 
 import org.petitparser.context.Context;
+import org.petitparser.context.MultiLineStringBuffer;
 import org.petitparser.context.Result;
 import org.petitparser.parser.Parser;
 
@@ -334,7 +335,7 @@ public class XmlCharacterParser extends Parser {
 
   @Override
   public Result parseOn(Context context) {
-    String input = context.getBuffer();
+    String input = context.getBuffer().getBuffer();
     StringBuilder output = new StringBuilder();
     int position = context.getPosition();
     int start = position;
@@ -345,7 +346,7 @@ public class XmlCharacterParser extends Parser {
       if (value == stopper) {
         break;
       } else if (value == '&') {
-        Result result = ENTITY.parseOn(context.success(null, position));
+        Result result = ENTITY.parseOn(context.success(null, context.getPosition(), position));
         if (result.isSuccess() && result.get() != null) {
           output.append(input, start, position);
           output.append((char) result.get());
@@ -363,11 +364,11 @@ public class XmlCharacterParser extends Parser {
     // check for the minimum length
     return output.length() < minLength
         ? context.failure("Unable to parse character data.")
-        : context.success(output.toString(), position);
+        : context.success(output.toString(),context.getPosition(),  position);
   }
 
   @Override
-  public int fastParseOn(String buffer, int position) {
+  public int fastParseOn(MultiLineStringBuffer buffer, int position) {
     int start = position;
     int length = buffer.length();
     while (position < length) {
