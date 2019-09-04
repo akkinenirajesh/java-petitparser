@@ -1,5 +1,6 @@
 package org.petitparser;
 
+import org.petitparser.context.MultiLineStringBuffer;
 import org.petitparser.context.ParseError;
 import org.petitparser.context.Result;
 import org.petitparser.parser.Parser;
@@ -26,7 +27,7 @@ public class Assertions {
     assertEquals("Position", position, result.getPosition());
     assertEquals("Result", expected, result.get());
     assertNull("No message expected", result.getMessage());
-    assertEquals("Fast parse", position, parser.fastParseOn(input, 0));
+    assertEquals("Fast parse", position, parser.fastParseOn(new MultiLineStringBuffer(input), 0));
     assertTrue("Accept", parser.accept(input));
   }
 
@@ -55,7 +56,7 @@ public class Assertions {
       assertEquals("Message expected", message, result.getMessage());
     }
     assertEquals("Expected fast parse failure", -1,
-        parser.fastParseOn(input, 0));
+        parser.fastParseOn(new MultiLineStringBuffer(input), 0));
     assertFalse("Accept", parser.accept(input));
     try {
       result.get();

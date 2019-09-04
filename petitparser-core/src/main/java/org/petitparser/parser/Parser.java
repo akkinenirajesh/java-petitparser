@@ -1,9 +1,12 @@
 package org.petitparser.parser;
 
 import org.petitparser.context.Context;
+import org.petitparser.context.MultiLineStringBuffer;
 import org.petitparser.context.Result;
+import org.petitparser.context.Success;
 import org.petitparser.context.Token;
 import org.petitparser.parser.actions.ActionParser;
+import org.petitparser.parser.actions.ActionParserWithResult;
 import org.petitparser.parser.actions.ContinuationParser;
 import org.petitparser.parser.actions.FlattenParser;
 import org.petitparser.parser.actions.TokenParser;
@@ -63,7 +66,7 @@ public abstract class Parser {
    * <p>Subclasses don't necessarily have to override this method, since it is
    * emulated using its slower brother.
    */
-  public int fastParseOn(String buffer, int position) {
+  public int fastParseOn(MultiLineStringBuffer buffer, int position) {
     Result result = parseOn(new Context(buffer, position));
     return result.isSuccess() ? result.getPosition() : -1;
   }
@@ -72,14 +75,14 @@ public abstract class Parser {
    * Returns the parse result of the {@code input}.
    */
   public Result parse(String input) {
-    return parseOn(new Context(input, 0));
+    return parseOn(new Context(new MultiLineStringBuffer(input), 0));
   }
 
   /**
    * Tests if the {@code input} can be successfully parsed.
    */
   public boolean accept(String input) {
-    return fastParseOn(input, 0) >= 0;
+    return fastParseOn(new MultiLineStringBuffer(input), 0) >= 0;
   }
 
   /**
@@ -89,7 +92,7 @@ public abstract class Parser {
   public <T> List<T> matches(String input) {
     List<Object> list = new ArrayList<>();
     and().mapWithSideEffects(list::add).seq(any()).or(any()).star()
-        .fastParseOn(input, 0);
+        .fastParseOn(new MultiLineStringBuffer(input), 0);
     return (List<T>) list;
   }
 
@@ -100,7 +103,7 @@ public abstract class Parser {
   @SuppressWarnings("unchecked")
   public <T> List<T> matchesSkipping(String input) {
     List<Object> list = new ArrayList<>();
-    mapWithSideEffects(list::add).or(any()).star().fastParseOn(input, 0);
+    mapWithSideEffects(list::add).or(any()).star().fastParseOn(new MultiLineStringBuffer(input), 0);
     return (List<T>) list;
   }
 
@@ -386,6 +389,16 @@ public abstract class Parser {
    */
   public <A, B> Parser map(Function<A, B> function) {
     return new ActionParser<>(this, function);
+  }
+  
+  /**
+   * Returns a parser that evaluates a {@code function} as the production action
+   * on success of the receiver.
+   *
+   * @param function production action without side-effects.
+   */
+  public <A, B> Parser mapResult(Function<Result, B> function) {
+    return new ActionParserWithResult<>(this, function);
   }
 
   /**

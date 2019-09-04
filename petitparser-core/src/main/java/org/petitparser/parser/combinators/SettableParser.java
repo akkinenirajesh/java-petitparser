@@ -1,5 +1,6 @@
 package org.petitparser.parser.combinators;
 
+import org.petitparser.context.MultiLineStringBuffer;
 import org.petitparser.parser.Parser;
 import org.petitparser.parser.primitive.FailureParser;
 
@@ -37,7 +38,7 @@ public class SettableParser extends DelegateParser {
   }
 
   @Override
-  public int fastParseOn(String buffer, int position) {
+  public int fastParseOn(MultiLineStringBuffer buffer, int position) {
     return delegate.fastParseOn(buffer, position);
   }
 

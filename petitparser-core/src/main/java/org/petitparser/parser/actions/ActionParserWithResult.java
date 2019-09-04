@@ -16,16 +16,16 @@ import java.util.function.Function;
  * @param <T> The type of the function argument.
  * @param <R> The type of the function result.
  */
-public class ActionParser<T, R> extends DelegateParser {
+public class ActionParserWithResult<R> extends DelegateParser {
 
-	protected final Function<T, R> function;
+	protected final Function<Result, R> function;
 	protected final boolean hasSideEffects;
 
-	public ActionParser(Parser delegate, Function<T, R> function) {
+	public ActionParserWithResult(Parser delegate, Function<Result, R> function) {
 		this(delegate, function, false);
 	}
 
-	public ActionParser(Parser delegate, Function<T, R> function, boolean hasSideEffects) {
+	public ActionParserWithResult(Parser delegate, Function<Result, R> function, boolean hasSideEffects) {
 		super(delegate);
 		this.function = Objects.requireNonNull(function, "Undefined function");
 		this.hasSideEffects = hasSideEffects;
@@ -35,7 +35,7 @@ public class ActionParser<T, R> extends DelegateParser {
 	public Result parseOn(Context context) {
 		Result result = delegate.parseOn(context);
 		if (result.isSuccess()) {
-			return result.success(function.apply(result.get()), context.getPosition(), result.getPosition());
+			return result.success(function.apply(result), context.getPosition(), result.getPosition());
 		} else {
 			return result;
 		}
@@ -49,12 +49,12 @@ public class ActionParser<T, R> extends DelegateParser {
 
 	@Override
 	protected boolean hasEqualProperties(Parser other) {
-		return super.hasEqualProperties(other) && Objects.equals(function, ((ActionParser<T, R>) other).function)
-				&& hasSideEffects == ((ActionParser<T, R>) other).hasSideEffects;
+		return super.hasEqualProperties(other) && Objects.equals(function, ((ActionParserWithResult<R>) other).function)
+				&& hasSideEffects == ((ActionParserWithResult<R>) other).hasSideEffects;
 	}
 
 	@Override
-	public ActionParser<T, R> copy() {
-		return new ActionParser<>(delegate, function, hasSideEffects);
+	public ActionParserWithResult<R> copy() {
+		return new ActionParserWithResult<>(delegate, function, hasSideEffects);
 	}
 }

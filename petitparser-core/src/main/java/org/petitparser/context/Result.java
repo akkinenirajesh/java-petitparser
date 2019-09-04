@@ -5,7 +5,7 @@ package org.petitparser.context;
  */
 public abstract class Result extends Context {
 
-  public Result(String buffer, int position) {
+  public Result(MultiLineStringBuffer buffer, int position) {
     super(buffer, position);
   }
 
@@ -36,4 +36,6 @@ public abstract class Result extends Context {
   public String getMessage() {
     return null;
   }
+  
+  public abstract Range getRange();
 }

@@ -1,6 +1,7 @@
 package org.petitparser.parser.combinators;
 
 import org.petitparser.context.Context;
+import org.petitparser.context.MultiLineStringBuffer;
 import org.petitparser.context.Result;
 import org.petitparser.parser.Parser;
 
@@ -28,7 +29,7 @@ public class ChoiceParser extends ListParser {
   }
 
   @Override
-  public int fastParseOn(String buffer, int position) {
+  public int fastParseOn(MultiLineStringBuffer buffer, int position) {
     int result = -1;
     for (Parser parser : parsers) {
       result = parser.fastParseOn(buffer, position);

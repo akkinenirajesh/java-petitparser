@@ -1,6 +1,7 @@
 package org.petitparser.parser.primitive;
 
 import org.petitparser.context.Context;
+import org.petitparser.context.MultiLineStringBuffer;
 import org.petitparser.context.Result;
 import org.petitparser.parser.Parser;
 
@@ -31,7 +32,7 @@ public class FailureParser extends Parser {
   }
 
   @Override
-  public int fastParseOn(String buffer, int position) {
+  public int fastParseOn(MultiLineStringBuffer buffer, int position) {
     return -1;
   }
 

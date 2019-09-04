@@ -10,43 +10,40 @@ import org.petitparser.parser.combinators.DelegateParser;
  */
 public class FlattenParser extends DelegateParser {
 
-  protected final String message;
+	protected final String message;
 
-  public FlattenParser(Parser delegate) {
-    this(delegate, null);
-  }
+	public FlattenParser(Parser delegate) {
+		this(delegate, null);
+	}
 
-  public FlattenParser(Parser delegate, String message) {
-    super(delegate);
-    this.message = message;
-  }
+	public FlattenParser(Parser delegate, String message) {
+		super(delegate);
+		this.message = message;
+	}
 
-  @Override
-  public Result parseOn(Context context) {
-    if (message == null) {
-      Result result = delegate.parseOn(context);
-      if (result.isSuccess()) {
-        String flattened = context.getBuffer()
-            .substring(context.getPosition(), result.getPosition());
-        return result.success(flattened);
-      } else {
-        return result;
-      }
-    } else {
-      // If we have a message we can switch to fast mode.
-      int position =
-          delegate.fastParseOn(context.getBuffer(), context.getPosition());
-      if (position < 0) {
-        return context.failure(message);
-      }
-      String output =
-          context.getBuffer().substring(context.getPosition(), position);
-      return context.success(output, position);
-    }
-  }
+	@Override
+	public Result parseOn(Context context) {
+		if (message == null) {
+			Result result = delegate.parseOn(context);
+			if (result.isSuccess()) {
+				String flattened = context.getBuffer().substring(context.getPosition(), result.getPosition());
+				return result.success(flattened, context.getPosition(), result.getPosition());
+			} else {
+				return result;
+			}
+		} else {
+			// If we have a message we can switch to fast mode.
+			int position = delegate.fastParseOn(context.getBuffer(), context.getPosition());
+			if (position < 0) {
+				return context.failure(message);
+			}
+			String output = context.getBuffer().substring(context.getPosition(), position);
+			return context.success(output,context.getPosition(), position);
+		}
+	}
 
-  @Override
-  public FlattenParser copy() {
-    return new FlattenParser(delegate, message);
-  }
+	@Override
+	public FlattenParser copy() {
+		return new FlattenParser(delegate, message);
+	}
 }
