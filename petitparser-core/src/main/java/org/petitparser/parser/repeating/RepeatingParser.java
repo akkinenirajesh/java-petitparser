@@ -39,7 +39,7 @@ public abstract class RepeatingParser extends DelegateParser {
 
   @Override
   public String toString() {
-    return super.toString() + "[" + getRange() + "]";
+    return delegate.toString() + "[" + getRange() + "]";
   }
 
   private String getRange() {

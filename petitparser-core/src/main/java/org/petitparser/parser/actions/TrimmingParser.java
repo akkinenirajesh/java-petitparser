@@ -74,6 +74,11 @@ public class TrimmingParser extends DelegateParser {
 	}
 
 	@Override
+	public String toString() {
+		return delegate.toString();
+	}
+
+	@Override
 	public List<Parser> getChildren() {
 		return Arrays.asList(delegate, left, right);
 	}

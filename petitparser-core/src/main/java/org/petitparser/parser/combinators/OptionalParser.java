@@ -44,4 +44,9 @@ public class OptionalParser extends DelegateParser {
 	public OptionalParser copy() {
 		return new OptionalParser(delegate, otherwise);
 	}
+
+	@Override
+	public String toString() {
+		return "[" + delegate + "]";
+	}
 }

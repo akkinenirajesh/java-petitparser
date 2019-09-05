@@ -55,4 +55,9 @@ public class SequenceParser extends ListParser {
 	public SequenceParser copy() {
 		return new SequenceParser(Arrays.copyOf(parsers, parsers.length));
 	}
+
+	@Override
+	public String toString() {
+		return "seq:" + Arrays.toString(parsers);
+	}
 }

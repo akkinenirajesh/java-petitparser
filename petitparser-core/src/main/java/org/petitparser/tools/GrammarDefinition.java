@@ -50,6 +50,7 @@ public class GrammarDefinition {
     if (parsers.containsKey(name)) {
       throw new IllegalStateException("Duplicate production: " + name);
     }
+    parser.setName(name);
     parsers.put(Objects.requireNonNull(name), Objects.requireNonNull(parser));
   }
 
@@ -149,6 +150,7 @@ public class GrammarDefinition {
 
     private Reference(String name) {
       this.name = Objects.requireNonNull(name);
+      setName(name);
     }
 
     private Parser resolve() {

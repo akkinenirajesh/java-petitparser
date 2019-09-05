@@ -23,6 +23,7 @@ public class ActionParser<T, R> extends DelegateParser {
 
 	public ActionParser(Parser delegate, Function<T, R> function) {
 		this(delegate, function, false);
+		setName(delegate.toString());
 	}
 
 	public ActionParser(Parser delegate, Function<T, R> function, boolean hasSideEffects) {

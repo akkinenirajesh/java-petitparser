@@ -2,8 +2,8 @@ package org.petitparser.context;
 
 public class Range {
 	public static final class Location {
-		final int line;
-		final int position;
+		public final int line;
+		public final int position;
 
 		public Location(int line, int position) {
 			this.line = line;

@@ -13,33 +13,33 @@ import java.util.Objects;
  */
 public class DelegateParser extends Parser {
 
-  protected Parser delegate;
+	protected Parser delegate;
 
-  public DelegateParser(Parser delegate) {
-    this.delegate =
-        Objects.requireNonNull(delegate, "Undefined delegate parser");
-  }
+	public DelegateParser(Parser delegate) {
+		this.delegate = Objects.requireNonNull(delegate, "Undefined delegate parser");
+		setName(delegate.getName());
+	}
 
-  @Override
-  public Result parseOn(Context context) {
-    return delegate.parseOn(context);
-  }
+	@Override
+	public Result parseOn(Context context) {
+		return delegate.parseOn(context);
+	}
 
-  @Override
-  public void replace(Parser source, Parser target) {
-    super.replace(source, target);
-    if (delegate == source) {
-      delegate = target;
-    }
-  }
+	@Override
+	public void replace(Parser source, Parser target) {
+		super.replace(source, target);
+		if (delegate == source) {
+			delegate = target;
+		}
+	}
 
-  @Override
-  public List<Parser> getChildren() {
-    return Collections.singletonList(delegate);
-  }
+	@Override
+	public List<Parser> getChildren() {
+		return Collections.singletonList(delegate);
+	}
 
-  @Override
-  public DelegateParser copy() {
-    return new DelegateParser(delegate);
-  }
+	@Override
+	public DelegateParser copy() {
+		return new DelegateParser(delegate);
+	}
 }

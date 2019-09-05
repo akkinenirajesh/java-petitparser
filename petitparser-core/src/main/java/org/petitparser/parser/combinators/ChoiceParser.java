@@ -12,43 +12,48 @@ import java.util.Arrays;
  */
 public class ChoiceParser extends ListParser {
 
-  public ChoiceParser(Parser... parsers) {
-    super(parsers);
-  }
+	public ChoiceParser(Parser... parsers) {
+		super(parsers);
+	}
 
-  @Override
-  public Result parseOn(Context context) {
-    Result result = null;
-    for (Parser parser : parsers) {
-      result = parser.parseOn(context);
-      if (result.isSuccess()) {
-        return result;
-      }
-    }
-    return result;
-  }
+	@Override
+	public Result parseOn(Context context) {
+		Result result = null;
+		for (Parser parser : parsers) {
+			result = parser.parseOn(context);
+			if (result.isSuccess()) {
+				return result;
+			}
+		}
+		return result;
+	}
 
-  @Override
-  public int fastParseOn(MultiLineStringBuffer buffer, int position) {
-    int result = -1;
-    for (Parser parser : parsers) {
-      result = parser.fastParseOn(buffer, position);
-      if (result >= 0) {
-        return result;
-      }
-    }
-    return result;
-  }
+	@Override
+	public int fastParseOn(MultiLineStringBuffer buffer, int position) {
+		int result = -1;
+		for (Parser parser : parsers) {
+			result = parser.fastParseOn(buffer, position);
+			if (result >= 0) {
+				return result;
+			}
+		}
+		return result;
+	}
 
-  @Override
-  public ChoiceParser or(Parser... others) {
-    Parser[] array = Arrays.copyOf(parsers, parsers.length + others.length);
-    System.arraycopy(others, 0, array, parsers.length, others.length);
-    return new ChoiceParser(array);
-  }
+	@Override
+	public ChoiceParser or(Parser... others) {
+		Parser[] array = Arrays.copyOf(parsers, parsers.length + others.length);
+		System.arraycopy(others, 0, array, parsers.length, others.length);
+		return new ChoiceParser(array);
+	}
 
-  @Override
-  public ChoiceParser copy() {
-    return new ChoiceParser(Arrays.copyOf(parsers, parsers.length));
-  }
+	@Override
+	public ChoiceParser copy() {
+		return new ChoiceParser(Arrays.copyOf(parsers, parsers.length));
+	}
+
+	@Override
+	public String toString() {
+		return "or:" + Arrays.toString(parsers);
+	}
 }
